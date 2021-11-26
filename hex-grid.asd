@@ -23,6 +23,7 @@
   :serial t
   :depends-on (#:alexandria #:j-utils #:3d-vectors)
   :components ((:file "package")
-               (:file "hex-coordinates")
+               (:file "coordinates")
+               (:file "conversions")
                (:file "hex-grid"))
   :in-order-to ((test-op (test-op hex-grid.test))))

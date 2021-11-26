@@ -145,105 +145,106 @@
              (is (equalp (hg:to-cube axial) cube)))))
 
 
-(test cube-to-oddq
-  (let ((oddqs
-          (list (hg:oddq :col 0  :row 0)
-                (hg:oddq :col 1  :row 0)
-                (hg:oddq :col 1  :row -1)
-                (hg:oddq :col -2 :row -2)
-                (hg:oddq :col 2  :row 2)
-                (hg:oddq :col -2 :row -1)
-                (hg:oddq :col -1 :row -1)
-                (hg:oddq :col -1 :row -2)))
-        (cubes
-          (list (hg:cube :Q 0 :R 0 :S 0)
-                (hg:cube :Q 1 :R 0 :S -1)
-                (hg:cube :Q 2 :R -1 :S -1)
-                (hg:cube :Q -1 :R -2 :S 3)
-                (hg:cube :Q 1 :R 2 :S -3)
-                (hg:cube :Q -1 :R -1 :S 2)
-                (hg:cube :Q 0 :R -1 :S 1)
-                (hg:cube :Q 0 :R -2 :S 2))))
-    (loop for oddq in oddqs
-          for cube in cubes
-          do
-             (is (equalp (hg:to-oddq cube) oddq))
-             (is (equalp (hg:to-cube oddq) cube)))))
+;; (test cube-to-oddq
+;;   (let ((oddqs
+;;           (list (hg:oddq :col 0  :row 0)
+;;                 (hg:oddq :col 1  :row 0)
+;;                 (hg:oddq :col 1  :row -1)
+;;                 (hg:oddq :col -2 :row -2)
+;;                 (hg:oddq :col 2  :row 2)
+;;                 (hg:oddq :col -2 :row -1)
+;;                 (hg:oddq :col -1 :row -1)
+;;                 (hg:oddq :col -1 :row -2)))
+;;         (cubes
+;;           (list (hg:cube :Q 0 :R 0 :S 0)
+;;                 (hg:cube :Q 1 :R 0 :S -1)
+;;                 (hg:cube :Q 2 :R -1 :S -1)
+;;                 (hg:cube :Q -1 :R -2 :S 3)
+;;                 (hg:cube :Q 1 :R 2 :S -3)
+;;                 (hg:cube :Q -1 :R -1 :S 2)
+;;                 (hg:cube :Q 0 :R -1 :S 1)
+;;                 (hg:cube :Q 0 :R -2 :S 2))))
+;;     (loop for oddq in oddqs
+;;           for cube in cubes
+;;           do
+;;              (is (equalp (hg:to-oddq cube) oddq))
+;;              (is (equalp (hg:to-cube oddq) cube)))))
 
-(test cube-to-evenq
-  (let ((evenqs
-          (list (hg:evenq :col 0  :row 0)
-                (hg:evenq :col 1  :row 0)
-                (hg:evenq :col 1  :row -1)
-                (hg:evenq :col -2 :row -2)
-                (hg:evenq :col 2  :row 2)
-                (hg:evenq :col -2 :row -1)
-                (hg:evenq :col -1 :row -1)
-                (hg:evenq :col -1 :row -2)))
-        (cubes
-          (list (hg:cube :Q 0 :R 0 :S 0)
-                (hg:cube :Q 1 :R 0 :S -1)
-                (hg:cube :Q 1 :R -1 :S 0)
-                (hg:cube :Q -1 :R -2 :S 3)
-                (hg:cube :Q 1 :R 2 :S -3)
-                (hg:cube :Q -2 :R -1 :S 3)
-                (hg:cube :Q -1 :R -1 :S 2)
-                (hg:cube :Q 0 :R -2 :S 2))))
-    (loop for evenq in evenqs
-          for cube in cubes
-          do
-             (is (equalp (hg:to-evenq cube) evenq))
-             (is (equalp (hg:to-cube evenq) cube)))))
+;; (test cube-to-evenq
+;;   (let ((evenqs
+;;           (list (hg:evenq :col 0  :row 0)
+;;                 (hg:evenq :col 1  :row 0)
+;;                 (hg:evenq :col 1  :row -1)
+;;                 (hg:evenq :col -2 :row -2)
+;;                 (hg:evenq :col 2  :row 2)
+;;                 (hg:evenq :col -2 :row -1)
+;;                 (hg:evenq :col -1 :row -1)
+;;                 (hg:evenq :col -1 :row -2)))
+;;         (cubes
+;;           (list (hg:cube :Q 0 :R 0 :S 0)
+;;                 (hg:cube :Q 1 :R 0 :S -1)
+;;                 (hg:cube :Q 1 :R -1 :S 0)
+;;                 (hg:cube :Q -1 :R -2 :S 3)
+;;                 (hg:cube :Q 1 :R 2 :S -3)
+;;                 (hg:cube :Q -2 :R -1 :S 3)
+;;                 (hg:cube :Q -1 :R -1 :S 2)
+;;                 (hg:cube :Q 0 :R -2 :S 2))))
+;;     (loop for evenq in evenqs
+;;           for cube in cubes
+;;           do
+;;              (is (equalp (hg:to-evenq cube) evenq))
+;;              (is (equalp (hg:to-cube evenq) cube)))))
 
-(test axial-to-evenq
-  (let ((evenqs
-          (list (hg:evenq :col 0  :row 0)
-                (hg:evenq :col 1  :row 0)
-                (hg:evenq :col 1  :row -1)
-                (hg:evenq :col -2 :row -2)
-                (hg:evenq :col 2  :row 2)
-                (hg:evenq :col -2 :row -1)
-                (hg:evenq :col -1 :row -1)
-                (hg:evenq :col -1 :row -2)))
-        (axials
-          (list (hg:axial :Q 0 :R 0)
-                (hg:axial :Q 1 :R 0)
-                (hg:axial :Q 1 :R -1)
-                (hg:axial :Q -1 :R -2)
-                (hg:axial :Q 1 :R 2)
-                (hg:axial :Q -2 :R -1)
-                (hg:axial :Q -1 :R -1)
-                (hg:axial :Q 0 :R -2))))
-    (loop for evenq in evenqs
-          for axial in axials
-          do
-             (is (equalp (hg:to-evenq axial) evenq))
-             (is (equalp (hg:to-axial evenq) axial)))))
+;; (test axial-to-evenq
+;;   (let ((evenqs
+;;           (list (hg:evenq :col 0  :row 0)
+;;                 (hg:evenq :col 1  :row 0)
+;;                 (hg:evenq :col 1  :row -1)
+;;                 (hg:evenq :col -2 :row -2)
+;;                 (hg:evenq :col 2  :row 2)
+;;                 (hg:evenq :col -2 :row -1)
+;;                 (hg:evenq :col -1 :row -1)
+;;                 (hg:evenq :col -1 :row -2)))
+;;         (axials
+;;           (list (hg:axial :Q 0 :R 0)
+;;                 (hg:axial :Q 1 :R 0)
+;;                 (hg:axial :Q 1 :R -1)
+;;                 (hg:axial :Q -1 :R -2)
+;;                 (hg:axial :Q 1 :R 2)
+;;                 (hg:axial :Q -2 :R -1)
+;;                 (hg:axial :Q -1 :R -1)
+;;                 (hg:axial :Q 0 :R -2))))
+;;     (loop for evenq in evenqs
+;;           for axial in axials
+;;           do
+;;              (is (equalp (hg:to-evenq axial) evenq))
+;;              (is (equalp (hg:to-axial evenq) axial)))))
 
-(test axial-to-oddq
-  (let ((oddqs
-          (list (hg:oddq :col 0  :row 0)
-                (hg:oddq :col 1  :row 0)
-                (hg:oddq :col 1  :row -1)
-                (hg:oddq :col -2 :row -2)
-                (hg:oddq :col 2  :row 2)
-                (hg:oddq :col -2 :row -1)
-                (hg:oddq :col -1 :row -1)
-                (hg:oddq :col -1 :row -2)))
-        (axials
-          (list (hg:axial :Q 0 :R 0)
-                (hg:axial :Q 1 :R 0)
-                (hg:axial :Q 2 :R -1)
-                (hg:axial :Q -1 :R -2)
-                (hg:axial :Q 1 :R 2)
-                (hg:axial :Q -1 :R -1)
-                (hg:axial :Q 0 :R -1)
-                (hg:axial :Q 0 :R -2))))
-    (loop for oddq in oddqs
-          for axial in axials
-          do
-             (is (equalp (hg:to-oddq axial) oddq) )
-             (is (equalp (hg:to-axial oddq) axial)))))
+;; (test axial-to-oddq
+;;   (let ((oddqs
+;;           (list (hg:oddq :col 0  :row 0)
+;;                 (hg:oddq :col 1  :row 0)
+;;                 (hg:oddq :col 1  :row -1)
+;;                 (hg:oddq :col -2 :row -2)
+;;                 (hg:oddq :col 2  :row 2)
+;;                 (hg:oddq :col -2 :row -1)
+;;                 (hg:oddq :col -1 :row -1)
+;;                 (hg:oddq :col -1 :row -2)))
+;;         (axials
+;;           (list (hg:axial :Q 0 :R 0)
+;;                 (hg:axial :Q 1 :R 0)
+;;                 (hg:axial :Q 2 :R -1)
+;;                 (hg:axial :Q -1 :R -2)
+;;                 (hg:axial :Q 1 :R 2)
+;;                 (hg:axial :Q -1 :R -1)
+;;                 (hg:axial :Q 0 :R -1)
+;;                 (hg:axial :Q 0 :R -2))))
+;;     (loop for oddq in oddqs
+;;           for axial in axials
+;;           do
+;;              (is (equalp (hg:to-oddq axial) oddq) )
+;;              (is (equalp (hg:to-axial oddq) axial)))))
+
 (test axial-add
   (let ((res (hg:axial-add (hg:axial :q 3 :r 4)
                            (hg:axial :q 6 :r 6))))
