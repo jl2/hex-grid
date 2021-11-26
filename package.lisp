@@ -21,11 +21,22 @@
 
   (:use #:cl #:j-utils #:alexandria #:3d-vectors)
   (:export #:hex-grid
+           #:make-hex-grid
+           #:min-col
+           #:max-col
+           #:min-row
+           #:max-row
            #:state
 
            #:neighbor
            #:neighbors
+
            #:axial-add
+           #:axial-sub
+
+           #:oddr-add
+           #:oddr-sub
+
            #:radius
            #:hex-count
            #:center

@@ -16,3 +16,93 @@
 
 (in-package :hex-grid)
 
+(defclass hex-grid ()
+  ((hex-radius :initform 1.0f0
+               :initarg :hex-radius)
+   (hex-type :initform :flat
+             :initarg :hex-type
+             :type '(or :flat :pointy))
+
+   (default-state :initform 0
+                  :initarg :default-state)
+
+   (min-hex :initform (oddr :col 0 :row 0)
+            :initarg :min-hex)
+   (max-hex :initform (oddr :col 10 :row 10)
+            :initarg :max-hex)
+
+   (width :initform (oddr :col 10 :row 10)
+          :initarg :width)
+
+   (states :initarg :states)))
+
+(defun make-hex-grid (&key
+                        (min-hex (oddr :col 0 :row 0))
+                        (max-hex (oddr :col 10 :row 10))
+                        (hex-type :flat)
+                        (hex-radius 1.0)
+                        (default-state 0))
+  (with-slots ((min-col col) (min-row row)) (to-oddr min-hex)
+    (with-slots ((max-col col) (max-row row)) (to-oddr max-hex)
+      (let ((col-width (- max-col min-col))
+            (row-width (- max-row min-row)))
+      (make-instance 'hex-grid
+                     :min-hex min-hex
+                     :max-hex max-hex
+                     :hex-type hex-type
+                     :hex-radius hex-radius
+                     :default-state default-state
+                     :width (oddr :col col-width
+                                  :row row-width)
+                     :states (make-array (list row-width
+                                               col-width)
+                                         :element-type 'fixnum
+                                         :initial-element default-state))))))
+
+(defun state (hg coordinate)
+  (with-slots (min-hex states width default-state) hg
+    (with-slots (row col) (oddr-sub (to-oddr coordinate) min-hex)
+      (with-slots ((max-row row) (max-col col)) width
+        (cond
+          ((and (< row max-row)
+                (< col max-col)
+                (>= col 0)
+                (>= row 0))
+           (aref states row col))
+          (t
+           ;; (format t "Returning default for ~a~%" coordinate)
+           default-state))))))
+
+(defun (setf state) (value hg coordinate)
+  (with-slots (min-hex states width) hg
+    (with-slots (row col) (oddr-sub (to-oddr coordinate) min-hex)
+      (with-slots ((max-row row) (max-col col)) width
+        (cond
+          ((and (< row max-row)
+                (>= row 0)
+                (< col max-col)
+                (>= col 0))
+           (setf (aref states row col) value))
+          (t
+           (error "~a is not a valid coordinate for hex-grid ~a"
+                  coordinate hg)))))))
+
+(defun min-col (hg)
+  (with-slots (min-hex) hg
+    (with-slots (col) min-hex
+      col)))
+
+(defun max-col (hg)
+  (with-slots (max-hex) hg
+    (with-slots (col) max-hex
+      col)))
+
+(defun min-row (hg)
+  (with-slots (min-hex) hg
+    (with-slots (row) min-hex
+      row)))
+
+(defun max-row (hg)
+  (with-slots (max-hex) hg
+    (with-slots (row) max-hex
+      row)))

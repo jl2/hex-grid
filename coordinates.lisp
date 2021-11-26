@@ -79,7 +79,10 @@
     evenq-coordinate oddq-coordinate)
   )
 
-(declaim (ftype (function (hex-coordinate hex-coordinate) axial-coordinate) axial-add))
+(defgeneric hex-add (a b))
+
+(declaim (ftype (function (hex-coordinate hex-coordinate) axial-coordinate)
+                axial-add axial-sub))
 (defun axial-add (a b)
   "Add two hex-coordinates.  Converts both parameters to axial-coordinate and returns an axial-coordinate."
   (declare (type hex-coordinate a b))
@@ -92,6 +95,43 @@
                  (+ (axial-r aa)
                     (axial-r bb))))))
 
+(defun axial-sub (a b)
+  "Add two hex-coordinates.  Converts both parameters to axial-coordinate and returns an axial-coordinate."
+  (declare (type hex-coordinate a b))
+  (let ((aa (to-axial a))
+        (bb (to-axial b)))
+  (axial :q (the fixnum
+                 (- (axial-q aa)
+                    (axial-q bb)))
+         :r (the fixnum
+                 (- (axial-r aa)
+                    (axial-r bb))))))
+
+(declaim (ftype (function (hex-coordinate hex-coordinate) oddr-coordinate)
+                oddr-add oddr-sub))
+(defun oddr-add (a b)
+  "Add two hex-coordinates.  Converts both parameters to axial-coordinate and returns an axial-coordinate."
+  (declare (type hex-coordinate a b))
+  (let ((aa (to-oddr a))
+        (bb (to-oddr b)))
+    (oddr :col (the fixnum
+                    (+ (oddr-col aa)
+                       (oddr-col bb)))
+          :row (the fixnum
+                    (+ (oddr-row aa)
+                       (oddr-row bb))))))
+
+(defun oddr-sub (a b)
+  "Add two hex-coordinates.  Converts both parameters to axial-coordinate and returns an axial-coordinate."
+  (declare (type hex-coordinate a b))
+  (let ((aa (to-oddr a))
+        (bb (to-oddr b)))
+    (oddr :col (the fixnum
+                    (- (oddr-col aa)
+                       (oddr-col bb)))
+          :row (the fixnum
+                    (- (oddr-row aa)
+                       (oddr-row bb))))))
 
 (declaim (ftype (function (fixnum) (integer 0 1)) is-even))
 (defun is-even (num)
