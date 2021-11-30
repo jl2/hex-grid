@@ -22,11 +22,17 @@
   (:use #:cl #:j-utils #:alexandria #:3d-vectors)
   (:export #:hex-grid
            #:make-hex-grid
+           #:min-hex
+           #:max-hex
            #:min-col
            #:max-col
            #:min-row
            #:max-row
+           #:col-size
+           #:row-size
            #:state
+           #:state-idx
+           #:swap-states
 
            #:neighbor
            #:neighbors

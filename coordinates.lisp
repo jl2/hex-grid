@@ -76,8 +76,7 @@
     axial-coordinate
     valid-cube-coordinate
     evenr-coordinate oddr-coordinate
-    evenq-coordinate oddq-coordinate)
-  )
+    evenq-coordinate oddq-coordinate))
 
 (defgeneric hex-add (a b))
 
@@ -160,7 +159,7 @@
 (defun neighbors (coord)
   "Return the coordinates of all 6 of a hexagon's neighbors."
   (declare (type hex-coordinate coord))
-  (map 'array
+  (map 'vector
        (lambda (val) (axial-add (to-axial coord) val))
        *axial-offsets*))
 
