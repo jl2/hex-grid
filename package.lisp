@@ -31,8 +31,13 @@
            #:col-size
            #:row-size
            #:state
+           #:states
            #:state-idx
            #:swap-states
+           #:hex-radius
+           #:hex-type
+           #:default-state
+           #:width
 
            #:neighbor
            #:neighbors

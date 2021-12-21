@@ -57,13 +57,12 @@
                      :default-state default-state
                      :width (oddr :col col-width
                                   :row row-width)
-                     :states (make-array (list 2
-                                               row-width
+                     :states (make-array (list row-width
                                                col-width)
                                          :element-type 'fixnum
                                          :initial-element default-state))))))
 
-(defun state (hg idx coordinate)
+(defun state (hg coordinate)
   (with-slots (min-hex states width default-state) hg
     (with-slots (row col) (oddr-sub (to-oddr coordinate) min-hex)
       (with-slots ((max-row row) (max-col col)) width
@@ -72,12 +71,12 @@
                 (< col max-col)
                 (>= col 0)
                 (>= row 0))
-           (aref states idx row col))
+           (aref states row col))
           (t
            ;; (format t "Returning default for ~a~%" coordinate)
            (random 2)))))))
 
-(defun (setf state) (value hg idx coordinate)
+(defun (setf state) (value hg coordinate)
   (with-slots (min-hex states width) hg
     (with-slots (row col) (oddr-sub (to-oddr coordinate) min-hex)
       (with-slots ((max-row row) (max-col col)) width
@@ -86,14 +85,10 @@
                 (>= row 0)
                 (< col max-col)
                 (>= col 0))
-           (setf (aref states idx row col) value))
+           (setf (aref states row col) value))
           (t
            (error "~a is not a valid coordinate for hex-grid ~a"
                   coordinate hg)))))))
-
-(defun swap-states (hg)
-  (with-slots (min-hex states state-idx width) hg
-    (setf state-idx (mod (1+ state-idx) 2))))
 
 (defun min-col (hg)
   (with-slots (min-hex) hg
