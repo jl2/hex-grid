@@ -78,7 +78,84 @@
     evenr-coordinate oddr-coordinate
     evenq-coordinate oddq-coordinate))
 
-(defgeneric hex-add (a b))
+
+(declaim (ftype (function (hex-coordinate hex-coordinate) cube-coordinate)
+                cube-add cube-sub))
+(defun cube-add (a b)
+  "Add two hex-coordinates.  Converts both parameters to cube-coordinate and returns an cube-coordinate."
+  (declare (type hex-coordinate a b))
+  (let ((aa (to-cube a))
+        (bb (to-cube b)))
+    (cube :q (the fixnum
+                  (+ (cube-q aa)
+                     (cube-q bb)))
+          :r (the fixnum
+                  (+ (cube-r aa)
+                     (cube-r bb)))
+          :s (the fixnum
+                  (+ (cube-s aa)
+                     (cube-s bb))))))
+
+(defun cube-sub (a b)
+  "Add two hex-coordinates.  Converts both parameters to cube-coordinate and returns an cube-coordinate."
+  (declare (type hex-coordinate a b))
+  (let ((aa (to-cube a))
+        (bb (to-cube b)))
+    (cube :q (the fixnum
+                  (- (cube-q aa)
+                     (cube-q bb)))
+          :r (the fixnum
+                  (- (cube-r aa)
+                     (cube-r bb)))
+          :s (the fixnum
+                  (- (cube-s aa)
+                     (cube-s bb))))))
+
+(declaim (ftype (function (hex-coordinate fixnum) cube-coordinate)
+                cube-scale))
+(defun cube-scale (hex factor)
+  "Convert to hex cube coordinates and scale by factor."
+  (declare (type hex-coordinate hex)
+           (type fixnum factor))
+  (let ((cbe (to-cube hex)))
+    (cube :q (the fixnum
+                  (* (cube-q cbe)
+                     factor))
+          :r (the fixnum
+                  (* (cube-r cbe)
+                     factor))
+          :s (the fixnum
+                  (* (cube-s cbe)
+                     factor)))))
+
+(declaim (ftype (function (hex-coordinate hex-coordinate) fixnum)
+                hex-distance))
+(defun hex-distance (a b)
+  "Find the cube coordinate distance between a and b.  Converts both parameters to cube-coordinate and returns a fixnum."
+  (declare (type hex-coordinate a b))
+  (let ((diff (cube-sub a b)))
+    (the fixnum
+         (max (abs (cube-q diff))
+              (abs (cube-r diff))
+              (abs (cube-s diff))))))
+
+(declaim (ftype (function (hex-coordinate fixnum) list)
+                hex-ring))
+(defun hex-ring (center radius)
+  "Find all hexagons radius units away from center."
+  (declare (type hex-coordinate center)
+           (type fixnum radius))
+  (let ((hex (cube-add center (cube-scale (aref *cube-direction-vectors* 4) radius)))
+        (results nil))
+    (loop
+      :for i :below 6
+      :do
+         (loop
+           :for j :below radius
+           :do 
+              (push hex results)
+              (setf hex (cube-neighbor hex i))))
+    results))
 
 (declaim (ftype (function (hex-coordinate hex-coordinate) axial-coordinate)
                 axial-add axial-sub))
@@ -93,6 +170,9 @@
          :r (the fixnum
                  (+ (axial-r aa)
                     (axial-r bb))))))
+
+(declaim (ftype (function (hex-coordinate hex-coordinate) fixnum)
+                axial-distance))
 
 (defun axial-sub (a b)
   "Add two hex-coordinates.  Converts both parameters to axial-coordinate and returns an axial-coordinate."
@@ -139,7 +219,7 @@
   (the fixnum
        (logand num 1)))
 
-(defparameter *axial-offsets*
+(defparameter *axial-direction-vectors*
   (make-array 6 :element-type 'axial-coordinate
                 :initial-contents
                 `(,(axial :q 1 :r 0)
@@ -148,13 +228,30 @@
                   ,(axial :q -1 :r 0)
                   ,(axial :q -1 :r 1)
                   ,(axial :q 0 :r 1)))
-  "The coordinate offsets for all neighbors of a hexagon.")
+  "The coordinate offsets for all neighbors of a hexagon in axial coordinates.")
 
-(defun neighbor (coord i)
+(defparameter *cube-direction-vectors*
+  (make-array 6 :element-type 'cube-coordinate
+                :initial-contents
+                `(,(cube :q 1 :r 0 :s -1)
+                  ,(cube :q 1 :r -1 :s 0)
+                  ,(cube :q 0 :r -1 :s 1)
+                  ,(cube :q -1 :r 0 :s 1)
+                  ,(cube :q -1 :r 1 :s 0)
+                  ,(cube :q 0 :r 1 :s -1)))
+  "The coordinate offsets for all neighbors of a hexagon in cube coordinates.")
+
+(defun axial-neighbor (coord i)
   "Return the coordinate of a single hexagon neighboring the coord."
   (declare (type hex-coordinate coord)
            (type (integer 0 6) i))
-  (axial-add (to-axial coord) (aref *axial-offsets* i)))
+  (axial-add (to-axial coord) (aref *axial-direction-vectors* i)))
+
+(defun cube-neighbor (coord i)
+  "Return the coordinate of a single hexagon neighboring the coord."
+  (declare (type hex-coordinate coord)
+           (type (integer 0 6) i))
+  (cube-add (to-cube coord) (aref *cube-direction-vectors* i)))
 
 (defun neighbors (coord)
   "Return the coordinates of all 6 of a hexagon's neighbors."
@@ -183,7 +280,7 @@
 (defun hex-vert (center radius n &optional (offset-angle 0.0))
   "Return the coordinate o of a hexagon centered at center."
   (declare (type vec2 center)
-           (type double-float radius offset-angle)
+           (type real radius offset-angle)
            (type (integer 0 6) n))
   (let ((theta (+ offset-angle (/ (* n 2 pi) 6))))
     (v+ center

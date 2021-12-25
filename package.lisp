@@ -40,10 +40,18 @@
            #:width
 
            #:neighbor
+           #:cube-neighbor
            #:neighbors
 
            #:axial-add
            #:axial-sub
+
+           #:cube-add
+           #:cube-sub
+           #:cube-scale
+
+           #:hex-ring
+           #:hex-distance
 
            #:oddr-add
            #:oddr-sub
