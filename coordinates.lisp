@@ -277,7 +277,7 @@
                     2)
                  r)))))
 
-(defun hex-vert (center radius n &optional (offset-angle 0.0))
+(defun hex-vert (center radius n &optional (offset-angle 0.0d0))
   "Return the coordinate o of a hexagon centered at center."
   (declare (type vec2 center)
            (type real radius offset-angle)

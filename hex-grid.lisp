@@ -74,7 +74,7 @@
            (aref states row col))
           (t
            ;; (format t "Returning default for ~a~%" coordinate)
-           (random 2)))))))
+           (random 3)))))))
 
 (defun (setf state) (value hg coordinate)
   (with-slots (min-hex states width) hg
